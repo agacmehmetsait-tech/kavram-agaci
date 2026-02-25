@@ -7,206 +7,317 @@
 
   <style>
     :root{
-      --bg:#2f6b4f;   /* günlük tema */
-      --bg2:#0f2018;
-      --text:#ffffff;
-      --muted: rgba(255,255,255,.75);
+      --theme:#2f6b4f;         /* gün rengi */
+      --theme2:#0f2018;
+      --ink: rgba(10,20,35,.90);
+      --glass: rgba(255,255,255,.82);
+      --glass2: rgba(255,255,255,.60);
+      --stroke: rgba(10,20,35,.16);
+      --shadow: 0 20px 70px rgba(0,0,0,.25);
     }
+
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--text);
       min-height:100vh;
-      background: linear-gradient(180deg, var(--bg), var(--bg2));
-    }
-
-    header{
-      max-width: 980px;
-      margin: 16px auto 8px;
-      padding: 0 14px;
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:flex-start;
-    }
-    header h1{margin:0;font-size:22px}
-    header p{margin:6px 0 0;color:var(--muted);font-size:13px;max-width:65ch;line-height:1.4}
-    .pill{
-      border:1px solid rgba(255,255,255,.22);
-      background: rgba(0,0,0,.18);
-      padding:8px 10px;
-      border-radius:999px;
-      font-size:12px;
-      color: var(--muted);
-      backdrop-filter: blur(8px);
-      white-space:nowrap;
-    }
-
-    main{
-      max-width: 980px;
-      margin: 0 auto 28px;
-      padding: 0 14px;
-      display:grid;
-      gap:12px;
-    }
-
-    .panel{
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.22);
-      border-radius:18px;
-      padding:14px 14px 16px;
-      backdrop-filter: blur(10px);
-    }
-
-    /* Üst açıklama */
-    #infoTitle{margin:0;font-size:18px}
-    #infoMini{color:var(--muted);font-size:12px;margin-top:6px}
-    #infoDesc{margin-top:10px;white-space:pre-wrap;line-height:1.65;font-size:14.5px}
-
-    /* Ağaç sahnesi */
-    .scene{
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.18);
-      border-radius:18px;
-      overflow:hidden;
-      backdrop-filter: blur(10px);
-    }
-    .sceneTop{
-      padding:12px 14px;
-      border-bottom:1px solid rgba(255,255,255,.12);
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:center;
-    }
-    .sceneTop b{font-size:13px}
-    .sceneTop span{font-size:12px;color:var(--muted)}
-
-    .stageWrap{
+      background: linear-gradient(180deg,var(--theme),var(--theme2));
       display:flex;
       justify-content:center;
-      padding:14px 10px 18px;
     }
 
-    /* Buradaki kutu: resim + kelimeler üst üste */
+    /* POSTER KAPSAYICI */
+    .wrap{
+      width:min(980px, 100vw);
+      position:relative;
+    }
+
+    /* Poster görsel */
     .stage{
       position:relative;
-      width:min(680px, 94vw);
-      aspect-ratio: 3/4;
-      border-radius:18px;
-      overflow:hidden;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: 0 20px 70px rgba(0,0,0,.35);
-    }
-
-    /* AĞAÇ RESMİ ORTADA */
-    .treeImg{
-      position:absolute;
-      inset:0;
       width:100%;
-      height:100%;
-      object-fit:contain; /* ağaç kadraja sığsın */
-      z-index:1;
+      overflow:hidden;
     }
-
-    /* Tema rengi ağaca hafif yansısın */
-    .overlay{
-      position:absolute; inset:0;
-      background: linear-gradient(180deg, var(--bg), var(--bg2));
-      opacity:.18;
-      mix-blend-mode: multiply;
-      z-index:2;
-      pointer-events:none;
-    }
-
-    /* Yaprak/kelimeler mutlaka üstte kalsın */
-    .leaf{
-      position:absolute;
-      transform: translate(-50%,-50%);
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.55);          /* daha görünür */
-      border: 1px solid rgba(255,255,255,.25);
-      color: rgba(255,255,255,.95);
-      font-weight: 750;
-      font-size: 12px;
-      letter-spacing:.2px;
-      backdrop-filter: blur(8px);
-      cursor:pointer;
+    .poster{
+      width:100%;
+      height:auto;
+      display:block;
       user-select:none;
-      z-index:4; /* EN ÜST */
-      white-space:nowrap;
+      -webkit-user-drag:none;
     }
-    .leaf:hover{ transform: translate(-50%,-50%) scale(1.06); }
 
-    .centerWord{
+    /* Gün rengi posterin üstüne çok hafif */
+    .tint{
+      position:absolute; inset:0;
+      background: linear-gradient(180deg,var(--theme),var(--theme2));
+      opacity:.10;
+      mix-blend-mode:multiply;
+      pointer-events:none;
+      z-index:2;
+    }
+
+    /* DALGA ANİMASYONU (poster alt kısmında, arkada hafif hareket) */
+    .waveMask{
+      position:absolute;
+      left:0; right:0;
+      top:56%;   /* dalga bölgesini aşağıda tutuyor */
+      bottom:0;
+      overflow:hidden;
+      pointer-events:none;
+      z-index:3;
+      opacity:.35;
+      mix-blend-mode:multiply;
+    }
+    .wave{
+      position:absolute;
+      left:-20%;
+      width:140%;
+      height:100%;
+      background-repeat:repeat-x;
+      background-size: 900px 220px;
+      filter: blur(.2px);
+      animation: drift 12s linear infinite;
+      opacity:.75;
+      /* Dalga rengi gün rengine bağlanır */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='220' viewBox='0 0 900 220'%3E%3Cpath d='M0 70 C 120 30, 220 110, 360 70 C 500 30, 600 110, 740 70 C 820 45, 860 55, 900 70' fill='none' stroke='%230b2a55' stroke-width='10' opacity='0.35'/%3E%3Cpath d='M0 130 C 140 95, 240 165, 380 130 C 520 95, 620 165, 760 130 C 840 105, 875 115, 900 130' fill='none' stroke='%230b2a55' stroke-width='10' opacity='0.25'/%3E%3Cpath d='M0 190 C 120 155, 230 225, 360 190 C 490 155, 600 225, 740 190 C 820 165, 860 175, 900 190' fill='none' stroke='%230b2a55' stroke-width='10' opacity='0.18'/%3E%3C/svg%3E");
+    }
+    .wave.wave2{
+      top:10%;
+      opacity:.50;
+      animation-duration: 18s;
+      animation-direction: reverse;
+    }
+    @keyframes drift{
+      from{ transform: translateX(0); }
+      to{ transform: translateX(18%); }
+    }
+
+    /* SOL ÜST: GÜNLÜK SÖZCÜK (poster üstüne yazı) */
+    .dailyWord{
+      position:absolute;
+      left: 5.2%;
+      top: 4.5%;
+      z-index:10;
+      background: rgba(255,255,255,.0);
+      color: rgba(110,120,140,.95); /* posterdeki griye yakın */
+      font-weight: 900;
+      font-size: clamp(18px, 3.2vw, 44px);
+      letter-spacing:.2px;
+      line-height:1.05;
+      text-shadow: 0 10px 30px rgba(0,0,0,.08);
+      pointer-events:none; /* sadece yazı */
+      white-space:pre-line;
+    }
+
+    /* ÜSTTE AÇIKLAMA KUTUSU (posteri bozmayan cam panel) */
+    .infoBox{
       position:absolute;
       left:50%;
-      top:56%;
-      transform: translate(-50%,-50%);
-      padding: 14px 18px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.55);
-      border: 1px solid rgba(255,255,255,.30);
-      color:#fff;
-      font-weight: 900;
-      font-size: clamp(22px, 4vw, 44px);
-      letter-spacing:.8px;
-      cursor:pointer;
-      z-index:5; /* EN ÜST */
-      text-align:center;
-      box-shadow: 0 18px 55px rgba(0,0,0,.35);
+      top: 28%;
+      transform: translate(-50%, -50%);
+      width: min(84%, 760px);
+      z-index:12;
+      display:none;
+      background: var(--glass);
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 12px 14px 14px;
+      color: var(--ink);
+      backdrop-filter: blur(8px);
     }
-    .centerWord:hover{ transform: translate(-50%,-50%) scale(1.03); }
+    .infoTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .infoTitle{
+      font-weight: 950;
+      font-size: 18px;
+      letter-spacing:.2px;
+    }
+    .infoMeta{
+      font-size: 12px;
+      opacity:.75;
+    }
+    .infoDesc{
+      margin-top:8px;
+      line-height:1.55;
+      font-size: 14px;
+      white-space:pre-wrap;
+    }
+    .closeBtn{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.65);
+      border-radius: 12px;
+      padding: 6px 10px;
+      font-weight: 700;
+      cursor:pointer;
+    }
 
-    @media (max-width:520px){
-      .leaf{font-size:11px;padding:6px 9px}
-      .centerWord{top:58%}
+    /* HOTSPOT (şeffaf tıklama alanı) */
+    .hotspot{
+      position:absolute;
+      transform: translate(-50%,-50%);
+      z-index:15;
+      cursor:pointer;
+      border-radius: 12px;
+      background: rgba(255,255,255,0);
+      border: 1px solid rgba(255,255,255,0);
+    }
+    /* Debug açmak istersen (geçici):
+       .hotspot{ border-color: rgba(255,0,0,.35); background: rgba(255,0,0,.08); }
+    */
+
+    /* LOGO menü modal */
+    .modalBack{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      z-index:100;
+      padding: 18px;
+    }
+    .modal{
+      max-width: 860px;
+      margin: 0 auto;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(0,0,0,.10);
+      border-radius: 18px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.35);
+      overflow:hidden;
+      color: rgba(10,20,35,.92);
+    }
+    .modalHead{
+      padding: 12px 14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom: 1px solid rgba(0,0,0,.10);
+    }
+    .tabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .tab{
+      border:1px solid rgba(0,0,0,.12);
+      background: rgba(255,255,255,.60);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-weight:800;
+      font-size: 12px;
+      cursor:pointer;
+    }
+    .tab.active{
+      background: rgba(10,20,35,.10);
+    }
+    .modalBody{
+      padding: 14px;
+      line-height:1.6;
+      font-size: 14px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:10px;
+    }
+    .gItem{
+      border:1px solid rgba(0,0,0,.10);
+      border-radius: 14px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .gItem img{ width:100%; height:240px; object-fit:cover; display:block; }
+    @media (max-width:680px){
+      .grid{grid-template-columns: 1fr;}
+      .gItem img{height:220px;}
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <div>
-      <h1>🌳 Kavram Ağacı</h1>
-      <p>Ağaç ortada görünür. 25 kavram yaprak gibi üstüne yerleşir. Ortadaki büyük kavrama tıklayınca üstte açıklama değişir.</p>
-    </div>
-    <div class="pill" id="datePill">📅</div>
-  </header>
+  <div class="wrap">
+    <div class="stage" id="stage">
+      <!-- POSTER -->
+      <img class="poster" src="./bg.png" alt="Poster" />
+      <div class="tint"></div>
 
-  <main>
-    <section class="panel" id="infoCard">
-      <h2 id="infoTitle">Günün Kavramı</h2>
-      <div id="infoMini">Ortadaki kavrama tıkla.</div>
-      <div id="infoDesc">Burada kavram açıklaması görünecek.</div>
-    </section>
-
-    <section class="scene">
-      <div class="sceneTop">
-        <b>🍃 25 Kavram</b>
-        <span>Ortadaki kelime “bugünün kavramı”</span>
+      <!-- dalga hareket katmanı -->
+      <div class="waveMask">
+        <div class="wave"></div>
+        <div class="wave wave2"></div>
       </div>
 
-      <div class="stageWrap">
-        <div class="stage" id="stage">
-          <img class="treeImg" src="./bg.png" alt="Ağaç" />
-          <div class="overlay"></div>
+      <!-- sol üst günlük kelime -->
+      <div class="dailyWord" id="dailyWord"></div>
 
-          <div class="centerWord" id="centerWord">KURDÎ</div>
-          <!-- yapraklar JS ile eklenecek -->
+      <!-- üst açıklama kutusu -->
+      <div class="infoBox" id="infoBox">
+        <div class="infoTop">
+          <div class="infoTitle" id="infoTitle">Kavram</div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div class="infoMeta" id="infoMeta">•</div>
+            <button class="closeBtn" id="closeInfo">Kapat</button>
+          </div>
         </div>
+        <div class="infoDesc" id="infoDesc"></div>
       </div>
-    </section>
-  </main>
+
+      <!-- LOGO HOTSPOT (posterindeki logonun üstüne) -->
+      <div class="hotspot" id="logoHotspot"
+           style="left:50%; top:10.3%; width:18%; height:18%; border-radius:999px;"></div>
+
+      <!-- AĞAÇ ÜSTÜ KELİMELER HOTSPOTLARI (25 tane) -->
+      <!-- Konumlar posterine göre yaklaşık. Gerekirse 1 kere ekran görüntüsüyle milimetrik düzeltirim. -->
+      <div id="wordHotspots"></div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modalBack" id="modalBack">
+    <div class="modal">
+      <div class="modalHead">
+        <div class="tabs">
+          <div class="tab active" data-tab="brand">Marka</div>
+          <div class="tab" data-tab="contact">İletişim</div>
+          <div class="tab" data-tab="gallery">Galeri</div>
+        </div>
+        <button class="closeBtn" id="closeModal">Kapat</button>
+      </div>
+
+      <div class="modalBody" id="modalBody"></div>
+    </div>
+  </div>
 
   <script>
+    const $ = (id)=>document.getElementById(id);
+    const pad2 = (n)=>String(n).padStart(2,"0");
+
+    function dailyIndex(mod){
+      const d = new Date();
+      const key = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+      let h = 0;
+      for(let i=0;i<key.length;i++) h = (h*31 + key.charCodeAt(i)) >>> 0;
+      return h % mod;
+    }
+
+    // Gün renkleri (poster teması için)
+    const THEMES = [
+      { theme:"#2f6b4f", theme2:"#0f2018" },
+      { theme:"#2f4f6b", theme2:"#0f1b25" },
+      { theme:"#6a2f66", theme2:"#1c0f1c" },
+      { theme:"#7c5060", theme2:"#241419" },
+      { theme:"#6b5a2f", theme2:"#1f1a0e" },
+      { theme:"#2f6b6b", theme2:"#0e1f1f" },
+    ];
+
+    // 25 kavram + açıklama
     const CONCEPTS = [
       { word:"KURDÎ", desc:"Kurdî: Dil, kimlik ve hafıza." },
       { word:"Komel", desc:"Komel: Topluluk, dayanışma." },
-      { word:"Rojava", desc:"Rojava: Batı; coğrafya + anlam." },
+      { word:"Rojava", desc:"Rojava: Coğrafya + anlam." },
       { word:"Agahî", desc:"Agahî: Farkındalık, bilinç." },
       { word:"Azadî", desc:"Azadî: Özgürlük." },
       { word:"Hevî", desc:"Hevî: Umut." },
@@ -231,80 +342,140 @@
       { word:"Pîroz", desc:"Pîroz: Kutlu." },
     ];
 
-    // Yaprak konumları (posterine göre sonra ince ayar yaparız)
-    const POS = [
-      [30,16],[50,14],[70,16],
-      [22,24],[40,24],[60,24],[78,24],
-      [18,34],[33,34],[50,34],[67,34],[82,34],
-      [22,44],[38,44],[62,44],[78,44],
-      [26,54],[42,54],[58,54],[74,54],
-      [30,64],[50,64],[70,64],
-      [40,74],[60,74]
+    // Posterde ağaç bölgesi içindeki kelimelerin yaklaşık hotspot koordinatları
+    // left/top = % , w/h = % (poster üzerinde)
+    const HOTSPOTS = [
+      {w:"KURDÎ",  l:50, t:70.8,  w:22, h:7.5},  // merkez büyük
+      {w:"Komel",  l:52, t:63.4,  w:18, h:5.5},
+      {w:"Rojava", l:37, t:64.5,  w:18, h:5.5},
+      {w:"Agahî",  l:70.5,t:70.2,  w:14, h:5.0},
+      {w:"Pîroz",  l:79.0,t:73.0,  w:14, h:5.0},
+      {w:"Serma",  l:80.0,t:77.8,  w:14, h:5.0},
+      {w:"Raman",  l:63.0,t:79.8,  w:16, h:5.0},
+      {w:"Hogir",  l:73.0,t:84.0,  w:14, h:5.0},
+      {w:"Nûçe",   l:60.0,t:84.2,  w:14, h:5.0},
+      {w:"Hestî",  l:47.0,t:84.2,  w:14, h:5.0},
+      {w:"Çiya",   l:35.0,t:84.2,  w:12, h:5.0},
+      {w:"Peyam",  l:36.0,t:90.0,  w:14, h:5.0},
+      {w:"Bajar",  l:42.0,t:93.0,  w:14, h:5.0},
+      {w:"Bager",  l:55.0,t:92.0,  w:14, h:5.0},
+      {w:"Kom",    l:68.0,t:93.5,  w:12, h:5.0},
+      {w:"Za",     l:63.5,t:97.0,  w:10, h:4.0},
+      {w:"Mû",     l:49.0,t:96.0,  w:10, h:4.0},
+      {w:"Sores",  l:55.0,t:70.0,  w:16, h:5.2},
+      {w:"Name",   l:50.0,t:73.8,  w:14, h:5.0},
+      {w:"Beybûn", l:28.0,t:72.2,  w:18, h:5.2},
+      {w:"Şervan", l:27.0,t:76.8,  w:18, h:5.2},
+      {w:"Pevçûn", l:33.0,t:80.8,  w:18, h:5.2},
+      {w:"Sî",     l:31.0,t:75.0,  w:10, h:4.8},
+      {w:"av",     l:22.0,t:75.0,  w:10, h:4.8},
+      {w:"Sitar",  l:32.5,t:67.7,  w:16, h:5.2},
     ];
 
-    const THEMES = [
-      { bg:"#2f6b4f", bg2:"#0f2018" },
-      { bg:"#6a2f66", bg2:"#1c0f1c" },
-      { bg:"#2f4f6b", bg2:"#0f1b25" },
-      { bg:"#7c5060", bg2:"#241419" },
-      { bg:"#6b5a2f", bg2:"#1f1a0e" },
-      { bg:"#2f6b6b", bg2:"#0e1f1f" },
+    // Sol üst günlük sözcük havuzu (istersen başka liste yaparız)
+    const DAILY_WORDS = [
+      "Mêrê qenc\ndi şert de\ndiyar dibe",
+      "Ziman\nnasname ye",
+      "Hevî\nrê nîşan dide",
+      "Agahî\nrûmet e",
+      "Rêxistin\nhêz e"
     ];
-
-    const $ = (id)=>document.getElementById(id);
-    const pad2 = (n)=>String(n).padStart(2,"0");
-
-    function dailyIndex(mod){
-      const d = new Date();
-      const key = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
-      let h = 0;
-      for(let i=0;i<key.length;i++) h = (h*31 + key.charCodeAt(i)) >>> 0;
-      return h % mod;
-    }
 
     function applyTheme(){
       const t = THEMES[dailyIndex(THEMES.length)];
-      document.documentElement.style.setProperty("--bg", t.bg);
-      document.documentElement.style.setProperty("--bg2", t.bg2);
-
-      const d = new Date();
-      $("datePill").textContent = `📅 ${pad2(d.getDate())}.${pad2(d.getMonth()+1)}.${d.getFullYear()}`;
+      document.documentElement.style.setProperty("--theme", t.theme);
+      document.documentElement.style.setProperty("--theme2", t.theme2);
     }
 
-    function showConcept(word, first=false){
-      const c = CONCEPTS.find(x=>x.word===word) || CONCEPTS[0];
+    function setDailyWord(){
+      const s = DAILY_WORDS[dailyIndex(DAILY_WORDS.length)];
+      $("dailyWord").textContent = s;
+    }
+
+    function showInfo(word){
+      const c = CONCEPTS.find(x=>x.word.toLowerCase()===word.toLowerCase()) || {word, desc:"(Açıklama eklenecek)"};
+      const d = new Date();
       $("infoTitle").textContent = c.word;
       $("infoDesc").textContent = c.desc;
-      $("infoMini").textContent = first ? "Bugünün kavramı" : "Seçildi";
-      if(!first) $("infoCard").scrollIntoView({behavior:"smooth", block:"start"});
+      $("infoMeta").textContent = `📅 ${pad2(d.getDate())}.${pad2(d.getMonth()+1)}.${d.getFullYear()}`;
+      $("infoBox").style.display = "block";
+      window.scrollTo({top:0, behavior:"smooth"});
     }
 
-    function renderLeaves(){
-      const stage = $("stage");
-      stage.querySelectorAll(".leaf").forEach(x=>x.remove());
+    function hideInfo(){
+      $("infoBox").style.display = "none";
+    }
 
-      CONCEPTS.forEach((c, i)=>{
-        const [x,y] = POS[i] || [50,50];
+    function renderHotspots(){
+      const box = $("wordHotspots");
+      box.innerHTML = "";
+      HOTSPOTS.forEach(h=>{
         const el = document.createElement("div");
-        el.className = "leaf";
-        el.textContent = c.word;
-        el.style.left = x + "%";
-        el.style.top  = y + "%";
-        el.onclick = ()=> showConcept(c.word);
-        stage.appendChild(el);
+        el.className = "hotspot";
+        el.style.left = h.l + "%";
+        el.style.top  = h.t + "%";
+        el.style.width  = h.w + "%";
+        el.style.height = h.h + "%";
+        el.title = h.w;
+        el.onclick = ()=> showInfo(h.w);
+        box.appendChild(el);
       });
     }
 
-    function setDailyCenter(){
-      const idx = dailyIndex(CONCEPTS.length);
-      $("centerWord").textContent = CONCEPTS[idx].word;
-      showConcept(CONCEPTS[idx].word, true);
-      $("centerWord").onclick = ()=> showConcept($("centerWord").textContent.trim());
+    // LOGO MODAL içerikleri
+    const BRAND_HTML = `
+      <b>Tora Çandên Zindî</b><br>
+      Bu bölüm “Marka hakkında” metni için. Buraya vizyon, amaç, değerler ve kısa tanıtım eklenir.
+    `;
+    const CONTACT_HTML = `
+      <b>İletişim</b><br>
+      E-posta: (buraya)<br>
+      Instagram: (buraya)<br>
+      Telefon: (buraya)
+    `;
+    const GALLERY_HTML = `
+      <b>Galeri</b>
+      <p>Repo içine <code>gallery</code> klasörü açıp görselleri koy: <code>gallery/1.jpg</code>, <code>gallery/2.jpg</code>...</p>
+      <div class="grid">
+        <div class="gItem"><img src="./gallery/1.jpg" onerror="this.style.display='none'"></div>
+        <div class="gItem"><img src="./gallery/2.jpg" onerror="this.style.display='none'"></div>
+        <div class="gItem"><img src="./gallery/3.jpg" onerror="this.style.display='none'"></div>
+        <div class="gItem"><img src="./gallery/4.jpg" onerror="this.style.display='none'"></div>
+      </div>
+    `;
+
+    function openModal(tab){
+      $("modalBack").style.display = "block";
+      setTab(tab || "brand");
+    }
+    function closeModal(){
+      $("modalBack").style.display = "none";
+    }
+    function setTab(name){
+      document.querySelectorAll(".tab").forEach(t=>{
+        t.classList.toggle("active", t.dataset.tab===name);
+      });
+      const body = $("modalBody");
+      body.innerHTML =
+        name==="brand" ? BRAND_HTML :
+        name==="contact" ? CONTACT_HTML :
+        GALLERY_HTML;
     }
 
+    // init
     applyTheme();
-    renderLeaves();
-    setDailyCenter();
+    setDailyWord();
+    renderHotspots();
+
+    $("closeInfo").onclick = hideInfo;
+
+    // Logo tıklanınca modal
+    $("logoHotspot").onclick = ()=> openModal("brand");
+    $("closeModal").onclick = closeModal;
+    $("modalBack").onclick = (e)=>{ if(e.target.id==="modalBack") closeModal(); };
+    document.querySelectorAll(".tab").forEach(t=>{
+      t.onclick = ()=> setTab(t.dataset.tab);
+    });
   </script>
 </body>
 </html>
