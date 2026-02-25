@@ -7,212 +7,140 @@
 
   <style>
     :root{
-      --bg: #2f6b4f;        /* günlük tema - JS güncelliyor */
-      --bg2:#122018;
-      --panel: rgba(15,15,18,.55);
-      --panelTint: rgba(255,255,255,.08);
-      --text: rgba(255,255,255,.93);
-      --muted: rgba(255,255,255,.72);
-      --stroke: rgba(255,255,255,.16);
-      --shadow: 0 18px 55px rgba(0,0,0,.35);
-      --radius: 18px;
-      --max: 1100px;
+      --bg:#2f6b4f;   /* günlük tema */
+      --bg2:#0f2018;
+      --text:#ffffff;
+      --muted: rgba(255,255,255,.75);
     }
-
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: radial-gradient(1100px 700px at 50% 20%, rgba(255,255,255,.10), rgba(0,0,0,.25)),
-                  linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.60));
       color: var(--text);
       min-height:100vh;
-      overflow-x:hidden;
-    }
-
-    /* Günlük renk tonu tüm sayfaya */
-    .tint{
-      position:fixed;
-      inset:0;
       background: linear-gradient(180deg, var(--bg), var(--bg2));
-      opacity:.55;
-      mix-blend-mode:multiply;
-      z-index:-2;
-      pointer-events:none;
-    }
-    .grain{
-      position:fixed;
-      inset:0;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
-      mix-blend-mode: overlay;
-      opacity:.45;
-      z-index:-1;
-      pointer-events:none;
     }
 
     header{
-      max-width: var(--max);
-      margin: 18px auto 0;
-      padding: 0 16px;
+      max-width: 980px;
+      margin: 16px auto 8px;
+      padding: 0 14px;
       display:flex;
-      align-items:flex-start;
       justify-content:space-between;
-      gap:12px;
+      gap:10px;
+      align-items:flex-start;
     }
-    .brand h1{
-      margin:0;
-      font-size: clamp(20px, 3.2vw, 34px);
-      letter-spacing:.2px;
-    }
-    .brand p{
-      margin:6px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      max-width: 64ch;
-      line-height:1.4;
-    }
+    header h1{margin:0;font-size:22px}
+    header p{margin:6px 0 0;color:var(--muted);font-size:13px;max-width:65ch;line-height:1.4}
     .pill{
-      background: rgba(255,255,255,.10);
-      border: 1px solid var(--stroke);
-      padding: 8px 10px;
-      border-radius: 999px;
-      font-size: 12px;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.18);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:12px;
       color: var(--muted);
       backdrop-filter: blur(8px);
       white-space:nowrap;
     }
 
     main{
-      max-width: var(--max);
-      margin: 14px auto 28px;
-      padding: 0 16px;
+      max-width: 980px;
+      margin: 0 auto 28px;
+      padding: 0 14px;
       display:grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
+      gap:12px;
     }
 
-    .card{
-      background: var(--panel);
-      border: 1px solid var(--stroke);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+    .panel{
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.22);
+      border-radius:18px;
+      padding:14px 14px 16px;
       backdrop-filter: blur(10px);
-      overflow:hidden;
     }
 
-    /* ÜST AÇIKLAMA PANELİ */
-    .info{
-      padding: 14px 16px 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-    }
-    .infoTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .infoTop h2{
-      margin:0;
-      font-size: 18px;
-      letter-spacing:.3px;
-    }
-    .infoTop .mini{
-      color: var(--muted);
-      font-size: 12px;
-    }
-    .desc{
-      margin-top:10px;
-      line-height:1.65;
-      color: rgba(255,255,255,.92);
-      white-space: pre-wrap;
-      font-size: 14.5px;
-    }
+    /* Üst açıklama */
+    #infoTitle{margin:0;font-size:18px}
+    #infoMini{color:var(--muted);font-size:12px;margin-top:6px}
+    #infoDesc{margin-top:10px;white-space:pre-wrap;line-height:1.65;font-size:14.5px}
 
-    /* AĞAÇ SAHNESİ */
+    /* Ağaç sahnesi */
     .scene{
-      position:relative;
-      min-height: 620px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.18);
+      border-radius:18px;
+      overflow:hidden;
+      backdrop-filter: blur(10px);
     }
-    .sceneHead{
+    .sceneTop{
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,.12);
       display:flex;
       justify-content:space-between;
-      align-items:center;
       gap:10px;
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-    }
-    .sceneHead b{ font-size: 13px; }
-    .sceneHead span{ font-size:12px; color: var(--muted); }
-
-    .treeWrap{
-      position:relative;
-      height: 620px;
-      overflow:hidden;
-      display:flex;
       align-items:center;
+    }
+    .sceneTop b{font-size:13px}
+    .sceneTop span{font-size:12px;color:var(--muted)}
+
+    .stageWrap{
+      display:flex;
       justify-content:center;
+      padding:14px 10px 18px;
     }
 
-    /* Ağaç görseli ortada */
-    .treeStage{
+    /* Buradaki kutu: resim + kelimeler üst üste */
+    .stage{
       position:relative;
-      width: min(620px, 92vw);
-      aspect-ratio: 3 / 4;         /* gerekirse değiştiririz */
-      border-radius: 18px;
-      overflow: hidden;
+      width:min(680px, 94vw);
+      aspect-ratio: 3/4;
+      border-radius:18px;
+      overflow:hidden;
       background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 20px 70px rgba(0,0,0,.35);
     }
 
+    /* AĞAÇ RESMİ ORTADA */
     .treeImg{
       position:absolute;
       inset:0;
       width:100%;
       height:100%;
-      object-fit: contain;          /* ağaç kadraja sığsın */
-      filter: saturate(1.05) contrast(1.02);
-      opacity: .98;
+      object-fit:contain; /* ağaç kadraja sığsın */
+      z-index:1;
     }
 
-    /* Günlük renk ağaca da yansısın (üstüne renk katmanı) */
-    .treeColorOverlay{
-      position:absolute;
-      inset:0;
-      background: radial-gradient(70% 55% at 50% 40%, rgba(255,255,255,.10), rgba(0,0,0,.08)),
-                  linear-gradient(180deg, var(--bg), var(--bg2));
-      opacity: .22;
-      mix-blend-mode: color;
+    /* Tema rengi ağaca hafif yansısın */
+    .overlay{
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, var(--bg), var(--bg2));
+      opacity:.18;
+      mix-blend-mode: multiply;
+      z-index:2;
       pointer-events:none;
     }
 
-    /* Yapraklar (ağacın üstüne) */
+    /* Yaprak/kelimeler mutlaka üstte kalsın */
     .leaf{
       position:absolute;
       transform: translate(-50%,-50%);
       padding: 7px 10px;
       border-radius: 999px;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.16);
-      color: rgba(255,255,255,.90);
+      background: rgba(0,0,0,.55);          /* daha görünür */
+      border: 1px solid rgba(255,255,255,.25);
+      color: rgba(255,255,255,.95);
       font-weight: 750;
       font-size: 12px;
       letter-spacing:.2px;
-      text-shadow: 0 2px 14px rgba(0,0,0,.35);
       backdrop-filter: blur(8px);
       cursor:pointer;
       user-select:none;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      z-index:4; /* EN ÜST */
       white-space:nowrap;
     }
-    .leaf:hover{
-      transform: translate(-50%,-50%) scale(1.06);
-      background: rgba(255,255,255,.14);
-      border-color: rgba(255,255,255,.26);
-    }
+    .leaf:hover{ transform: translate(-50%,-50%) scale(1.06); }
 
-    /* ORTADAKİ BÜYÜK KAVRAM (ağacın gövdesi civarı) */
     .centerWord{
       position:absolute;
       left:50%;
@@ -220,89 +148,71 @@
       transform: translate(-50%,-50%);
       padding: 14px 18px;
       border-radius: 999px;
-      background: rgba(255,255,255,.18);
-      border: 1px solid rgba(255,255,255,.26);
-      box-shadow: 0 18px 55px rgba(0,0,0,.35);
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(255,255,255,.30);
+      color:#fff;
       font-weight: 900;
-      letter-spacing: .8px;
       font-size: clamp(22px, 4vw, 44px);
+      letter-spacing:.8px;
       cursor:pointer;
-      backdrop-filter: blur(10px);
+      z-index:5; /* EN ÜST */
       text-align:center;
-      transition: transform .12s ease, background .12s ease;
+      box-shadow: 0 18px 55px rgba(0,0,0,.35);
     }
-    .centerWord:hover{
-      transform: translate(-50%,-50%) scale(1.03);
-      background: rgba(255,255,255,.22);
-    }
+    .centerWord:hover{ transform: translate(-50%,-50%) scale(1.03); }
 
-    @media (max-width: 520px){
-      .treeWrap{ height: 560px; }
-      .scene{ min-height: 560px; }
-      .leaf{ font-size: 11px; padding: 6px 9px; }
-      .centerWord{ top:58%; }
+    @media (max-width:520px){
+      .leaf{font-size:11px;padding:6px 9px}
+      .centerWord{top:58%}
     }
   </style>
 </head>
 
 <body>
-  <div class="tint"></div>
-  <div class="grain"></div>
-
   <header>
-    <div class="brand">
+    <div>
       <h1>🌳 Kavram Ağacı</h1>
-      <p>Her gün tema rengi ve ortadaki kavram değişir. Ortadaki kavrama tıkla: açıklama üstte açılır.</p>
+      <p>Ağaç ortada görünür. 25 kavram yaprak gibi üstüne yerleşir. Ortadaki büyük kavrama tıklayınca üstte açıklama değişir.</p>
     </div>
     <div class="pill" id="datePill">📅</div>
   </header>
 
   <main>
-    <!-- ÜST AÇIKLAMA -->
-    <section class="card info" id="infoCard">
-      <div class="infoTop">
-        <h2 id="infoTitle">Günün Kavramı</h2>
-        <div class="mini" id="infoMini">Ortadaki kavrama tıkla.</div>
-      </div>
-      <div class="desc" id="infoDesc">Burada kavram açıklaması görünecek.</div>
+    <section class="panel" id="infoCard">
+      <h2 id="infoTitle">Günün Kavramı</h2>
+      <div id="infoMini">Ortadaki kavrama tıkla.</div>
+      <div id="infoDesc">Burada kavram açıklaması görünecek.</div>
     </section>
 
-    <!-- AĞAÇ -->
-    <section class="card scene">
-      <div class="sceneHead">
-        <div>
-          <b>🍃 25 Kavram</b>
-          <span id="countPill">•</span>
-        </div>
+    <section class="scene">
+      <div class="sceneTop">
+        <b>🍃 25 Kavram</b>
         <span>Ortadaki kelime “bugünün kavramı”</span>
       </div>
 
-      <div class="treeWrap">
-        <div class="treeStage" id="treeStage">
-          <!-- SENİN AĞAÇ GÖRSELİN (şimdilik bg.png) -->
+      <div class="stageWrap">
+        <div class="stage" id="stage">
           <img class="treeImg" src="./bg.png" alt="Ağaç" />
-          <div class="treeColorOverlay"></div>
+          <div class="overlay"></div>
 
-          <!-- ORTADAKİ BÜYÜK KAVRAM -->
           <div class="centerWord" id="centerWord">KURDÎ</div>
-          <!-- Yapraklar JS ile buraya basılacak -->
+          <!-- yapraklar JS ile eklenecek -->
         </div>
       </div>
     </section>
   </main>
 
   <script>
-    // 1) 25 kavram + açıklama (bunu kendi listenle değiştirebilirsin)
     const CONCEPTS = [
-      { word:"KURDÎ", desc:"Kurdî; dil, kültür ve hafıza etrafında örgülenmiş bir varoluş alanıdır.\n\n(Buraya uzun açıklama ekleyeceğiz.)" },
-      { word:"Komel", desc:"Komel: Topluluk olma hâli, dayanışma, ortak üretim." },
-      { word:"Rojava", desc:"Rojava: Batı; coğrafi anlamı yanında çağdaş toplumsal anlamlar taşır." },
-      { word:"Agahî", desc:"Agahî: Farkındalık ve bilinç." },
+      { word:"KURDÎ", desc:"Kurdî: Dil, kimlik ve hafıza." },
+      { word:"Komel", desc:"Komel: Topluluk, dayanışma." },
+      { word:"Rojava", desc:"Rojava: Batı; coğrafya + anlam." },
+      { word:"Agahî", desc:"Agahî: Farkındalık, bilinç." },
       { word:"Azadî", desc:"Azadî: Özgürlük." },
       { word:"Hevî", desc:"Hevî: Umut." },
-      { word:"Şoreş", desc:"Şoreş: Dönüşüm ve kırılma." },
+      { word:"Şoreş", desc:"Şoreş: Dönüşüm." },
       { word:"Peyam", desc:"Peyam: Mesaj." },
-      { word:"Hestî", desc:"Hestî: Duygu ve his." },
+      { word:"Hestî", desc:"Hestî: His." },
       { word:"Nûçe", desc:"Nûçe: Haber." },
       { word:"Bajar", desc:"Bajar: Şehir." },
       { word:"Welat", desc:"Welat: Yurt." },
@@ -312,17 +222,16 @@
       { word:"Dîrok", desc:"Dîrok: Tarih." },
       { word:"Rê", desc:"Rê: Yol." },
       { word:"Raman", desc:"Raman: Düşünce." },
-      { word:"Kom", desc:"Kom: Bir araya geliş." },
+      { word:"Kom", desc:"Kom: Birlik." },
       { word:"Roj", desc:"Roj: Gün." },
       { word:"Nivîs", desc:"Nivîs: Yazı." },
       { word:"Xwendin", desc:"Xwendin: Okuma." },
       { word:"Rêxistin", desc:"Rêxistin: Örgütlenme." },
       { word:"Pevçûn", desc:"Pevçûn: Bağ kurma." },
-      { word:"Pîroz", desc:"Pîroz: Kutlu/hayırlı." },
+      { word:"Pîroz", desc:"Pîroz: Kutlu." },
     ];
 
-    // 2) Yaprak konumları (ağaç görselinin üstüne göre ayarlı)
-    // Gerekirse senin ağacına göre milim milim düzeltiriz.
+    // Yaprak konumları (posterine göre sonra ince ayar yaparız)
     const POS = [
       [30,16],[50,14],[70,16],
       [22,24],[40,24],[60,24],[78,24],
@@ -333,15 +242,13 @@
       [40,74],[60,74]
     ];
 
-    // 3) Günlük tema renkleri
     const THEMES = [
-      { bg:"#2f6b4f", bg2:"#102319" }, // yeşil
-      { bg:"#6a2f66", bg2:"#1e0f1d" }, // mor
-      { bg:"#2f4f6b", bg2:"#0e1a22" }, // mavi
-      { bg:"#7c5060", bg2:"#241419" }, // bordo/pembe
-      { bg:"#6b5a2f", bg2:"#1f1a0e" }, // zeytin
-      { bg:"#5b2f2f", bg2:"#1a0e0e" }, // koyu kırmızı
-      { bg:"#2f6b6b", bg2:"#0e1f1f" }, // teal
+      { bg:"#2f6b4f", bg2:"#0f2018" },
+      { bg:"#6a2f66", bg2:"#1c0f1c" },
+      { bg:"#2f4f6b", bg2:"#0f1b25" },
+      { bg:"#7c5060", bg2:"#241419" },
+      { bg:"#6b5a2f", bg2:"#1f1a0e" },
+      { bg:"#2f6b6b", bg2:"#0e1f1f" },
     ];
 
     const $ = (id)=>document.getElementById(id);
@@ -364,63 +271,40 @@
       $("datePill").textContent = `📅 ${pad2(d.getDate())}.${pad2(d.getMonth()+1)}.${d.getFullYear()}`;
     }
 
-    function renderLeaves(){
-      const stage = $("treeStage");
+    function showConcept(word, first=false){
+      const c = CONCEPTS.find(x=>x.word===word) || CONCEPTS[0];
+      $("infoTitle").textContent = c.word;
+      $("infoDesc").textContent = c.desc;
+      $("infoMini").textContent = first ? "Bugünün kavramı" : "Seçildi";
+      if(!first) $("infoCard").scrollIntoView({behavior:"smooth", block:"start"});
+    }
 
-      // eski yaprakları sil
-      [...stage.querySelectorAll(".leaf")].forEach(x=>x.remove());
+    function renderLeaves(){
+      const stage = $("stage");
+      stage.querySelectorAll(".leaf").forEach(x=>x.remove());
 
       CONCEPTS.forEach((c, i)=>{
-        const pos = POS[i] || [50,50];
+        const [x,y] = POS[i] || [50,50];
         const el = document.createElement("div");
         el.className = "leaf";
         el.textContent = c.word;
-        el.style.left = pos[0] + "%";
-        el.style.top  = pos[1] + "%";
-        el.onclick = ()=> showConcept(c.word, "leaf");
+        el.style.left = x + "%";
+        el.style.top  = y + "%";
+        el.onclick = ()=> showConcept(c.word);
         stage.appendChild(el);
       });
-
-      $("countPill").textContent = `• ${CONCEPTS.length} kavram`;
     }
 
-    function setDailyCenterWord(){
+    function setDailyCenter(){
       const idx = dailyIndex(CONCEPTS.length);
       $("centerWord").textContent = CONCEPTS[idx].word;
-      showConcept(CONCEPTS[idx].word, "today", true);
+      showConcept(CONCEPTS[idx].word, true);
+      $("centerWord").onclick = ()=> showConcept($("centerWord").textContent.trim());
     }
 
-    function showConcept(word, source, firstLoad=false){
-      const c = CONCEPTS.find(x=>x.word===word) || CONCEPTS[0];
-
-      $("infoTitle").textContent = c.word;
-      $("infoDesc").textContent = c.desc;
-
-      const d = new Date();
-      const dateStr = `${pad2(d.getDate())}.${pad2(d.getMonth()+1)}.${d.getFullYear()}`;
-
-      if(firstLoad){
-        $("infoMini").textContent = `Bugünün kavramı • ${dateStr}`;
-      }else{
-        $("infoMini").textContent = (source==="leaf") ? "Yapraktan seçildi." : "Ortadaki kavrama tıklandı.";
-        $("infoCard").scrollIntoView({behavior:"smooth", block:"start"});
-      }
-    }
-
-    function wireCenterClick(){
-      $("centerWord").onclick = ()=>{
-        const w = $("centerWord").textContent.trim();
-        showConcept(w, "center");
-      };
-    }
-
-    function init(){
-      applyTheme();
-      renderLeaves();
-      setDailyCenterWord();
-      wireCenterClick();
-    }
-    init();
+    applyTheme();
+    renderLeaves();
+    setDailyCenter();
   </script>
 </body>
 </html>
